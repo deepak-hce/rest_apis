@@ -2,6 +2,7 @@ const Promise = require('bluebird');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const APIError = require('../helpers/APIError');
+const { number } = require('joi');
 
 /**
  * User Schema
@@ -13,13 +14,26 @@ const UserSchema = new mongoose.Schema({
   },
   mobileNumber: {
     type: String,
-    required: true,
+    required: false,
     match: [/^[1-9][0-9]{9}$/, 'The value of path {PATH} ({VALUE}) is not a valid mobile number.']
   },
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  profilePicture: {
+    type: String,
+    required: false
+  },
+  age: {
+    type: Number,
+    required: false
   }
+
 });
 
 /**

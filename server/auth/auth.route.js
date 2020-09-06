@@ -16,4 +16,12 @@ router.route('/login')
 router.route('/random-number')
   .get(expressJwt({ secret: config.jwtSecret }), authCtrl.getRandomNumber);
 
+
+
+
+router.route('/register')
+  .post(validate(paramValidation.register), authCtrl.register);
+
+
+
 module.exports = router;

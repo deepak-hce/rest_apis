@@ -2,6 +2,10 @@ const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
 const APIError = require('../helpers/APIError');
 const config = require('../../config/config');
+const util = require('../helpers/util');
+const User = require('../user/user.model');
+const Response = require('../helpers/Response');
+
 
 // sample user, used for authentication
 const user = {
@@ -47,4 +51,40 @@ function getRandomNumber(req, res) {
   });
 }
 
-module.exports = { login, getRandomNumber };
+
+
+
+function register(req, res, next) {
+
+const encrypted = util.generatePasswordHash(req.body.password);
+
+console.log(encrypted)
+
+
+  const user = new User({
+    username: req.body.username,
+    mobileNumber: req.body.mobileNumber,
+    password: encrypted,
+    profilePicture: req.body.profilePicture,
+    age: req.body.age
+  });
+
+  user.save().then(() => res.json(new Response('Successfully created!')))
+  .catch(e => next(e))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+module.exports = { login, getRandomNumber, register };
