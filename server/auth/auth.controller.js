@@ -56,10 +56,15 @@ function getRandomNumber(req, res) {
 
 function register(req, res, next) {
 
+  User.findOne({username: req.body.username}, function (err, user) {
+    if (user !== null) {
+      return res.json(new Response('User is already registered.', httpStatus.CONFLICT))
+    }
+  });
+
+
+
 const encrypted = util.generatePasswordHash(req.body.password);
-
-console.log(encrypted)
-
 
   const user = new User({
     username: req.body.username,
