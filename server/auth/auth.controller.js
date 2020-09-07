@@ -60,7 +60,7 @@ function register(req, res, next) {
     if (user !== null) {
       const err = new APIError('User is already registered.', httpStatus.CONFLICT, true);
       next(err);
-      return;
+      return new Error(err);
     }
   });
 
@@ -78,7 +78,7 @@ function register(req, res, next) {
 
 
   user.save().then(() => {
-    util.sendEmail().then(() => {
+    util.sendEmail(req.body.username).then(() => {
       res.json(new Response('Successfully created!'));
     }).catch(err => {
       console.log(err);
