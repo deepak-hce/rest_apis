@@ -56,15 +56,17 @@ function getRandomNumber(req, res) {
 
 function register(req, res, next) {
 
-  User.findOne({username: req.body.username}, function (err, user) {
+  User.findOne({ username: req.body.username }, function (err, user) {
     if (user !== null) {
-      return res.json(new Response('User is already registered.', httpStatus.CONFLICT))
+      const err = new APIError('User is already registered.', httpStatus.CONFLICT, true);
+      next(err);
+      return;
     }
   });
 
 
 
-const encrypted = util.generatePasswordHash(req.body.password);
+  const encrypted = util.generatePasswordHash(req.body.password);
 
   const user = new User({
     username: req.body.username,
@@ -74,8 +76,17 @@ const encrypted = util.generatePasswordHash(req.body.password);
     age: req.body.age
   });
 
-  user.save().then(() => res.json(new Response('Successfully created!')))
-  .catch(e => next(e))
+
+  user.save().then(() => {
+    util.sendEmail().then(() => {
+      res.json(new Response('Successfully created!'));
+    }).catch(err => {
+      console.log(err);
+      const newError = new APIError(`Mail not sent successfully., ${err}`, httpStatus.BAD_GATEWAY, true);
+      next(newError);
+    })
+  })
+    .catch(e => next(e))
 }
 
 
