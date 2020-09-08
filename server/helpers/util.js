@@ -4,6 +4,9 @@ const APIError = require('./APIError');
 const httpStatus = require('http-status');
 const { resolve } = require('bluebird');
 const env =  process.env;
+const Email = require('email-templates');
+
+
 
 
 
@@ -34,20 +37,30 @@ function sendEmail(userEmail) {
         }
     });
 
+    const email = new Email({
+        transport: transport,
+        send: true,
+        preview: false,
+        views: {
+          root: '../views/templates',
+        }
+      });
+
     const message = {
+        template: 'welcome',
         from: env.MAIL_SMTP_EMAIL, // Sender address
         to: userEmail,         // List of recipients
-        subject: 'Welcome to screech hub!', // Subject line
-        text:
-        `       Hi, ${userEmail} 
+        // subject: 'Welcome to screech hub!', // Subject line
+        // text:
+        // `       Hi, ${userEmail} 
 
-            Welcome to the screech hub!. Hope you are enjoying a lot.
+        //     Welcome to the screech hub!. Hope you are enjoying a lot.
     
-        Thanks,
-        Screech Hub` // Plain text body
+        // Thanks,
+        // Screech Hub` // Plain text body
     };
 
-    transport.sendMail(message, function (err, info) {
+    email.send(message, function (err, info) {
         if (err) {
             reject(err);
         } else {

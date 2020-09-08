@@ -3,7 +3,12 @@
 
 
 function renderWelcome(req, res) {
-    return res.render('welcome');
+
+    console.log(req);
+
+    return res.render('welcome', {
+        query: req.query
+    });
 }
 
 
