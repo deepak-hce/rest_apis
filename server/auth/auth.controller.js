@@ -64,8 +64,6 @@ function register(req, res, next) {
     }
   });
 
-
-
   const encrypted = util.generatePasswordHash(req.body.password);
 
   const user = new User({
@@ -73,13 +71,14 @@ function register(req, res, next) {
     mobileNumber: req.body.mobileNumber,
     password: encrypted,
     profilePicture: req.body.profilePicture,
-    age: req.body.age
+    age: req.body.age,
+    name: req.body.name
   });
 
 
   user.save().then(() => {
     util.sendEmail(req.body.username).then(() => {
-      res.json(new Response('Successfully created!'));
+      res.json(new Response('User registered successfully!'));
     }).catch(err => {
       console.log(err);
       const newError = new APIError(`Mail not sent successfully., ${err}`, httpStatus.BAD_GATEWAY, true);

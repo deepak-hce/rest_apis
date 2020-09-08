@@ -37,6 +37,7 @@ module.exports = {
       password: Joi.string().required(),
       profilePicture: Joi.string(),
       age: Joi.string(),
+      name: Joi.string().required(),
       mobileNumber: Joi.string().regex(/^[1-9][0-9]{9}$/)
     }
   }

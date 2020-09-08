@@ -2,7 +2,7 @@ const Promise = require('bluebird');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const APIError = require('../helpers/APIError');
-const { number } = require('joi');
+const { number, string } = require('joi');
 
 /**
  * User Schema
@@ -33,6 +33,10 @@ const UserSchema = new mongoose.Schema({
   age: {
     type: Number,
     required: false
+  },
+  name: {
+    type: String,
+    required: true
   }
 
 });
