@@ -23,5 +23,11 @@ router.route('/register')
   .post(validate(paramValidation.register), authCtrl.register);
 
 
+// router.route('/token').get(authCtrl.token);
+
+router.route('/verify').post(authCtrl.tokenVerify);
+
+
+
 
 module.exports = router;

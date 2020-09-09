@@ -3,8 +3,9 @@ const nodemailer = require('nodemailer');
 const APIError = require('./APIError');
 const httpStatus = require('http-status');
 const { resolve } = require('bluebird');
-const env =  process.env;
-const Email = require('email-templates');
+const env = process.env;
+const config = require('../../config/config');
+const jwt = require('jsonwebtoken');
 
 
 
@@ -26,53 +27,78 @@ function successResponse(message, code = 1) {
 }
 
 
-function sendEmail(userEmail) {
-   return new Promise((resolve, reject) => {
-    let transport = nodemailer.createTransport({
-        host: env.MAIL_SMTP_HOST,
-        port: env.MAIL_SMTP_PORT,
-        auth: {
-            user: env.MAIL_SMTP_USERNAME,
-            pass: env.MAIL_SMTP_PASSWORD
-        }
-    });
+function sendEmail(userEmail, verificationObject) {
+    return new Promise((resolve, reject) => {
+        let transport = nodemailer.createTransport({
+            host: env.MAIL_SMTP_HOST,
+            port: env.MAIL_SMTP_PORT,
+            auth: {
+                user: env.MAIL_SMTP_USERNAME,
+                pass: env.MAIL_SMTP_PASSWORD
+            }
+        });
 
-    const email = new Email({
-        transport: transport,
-        send: true,
-        preview: false,
-        views: {
-          root: '../views/templates',
-        }
-      });
+        const content = generateEmailVerificationContent(userEmail, verificationObject);
 
-    const message = {
-        template: 'welcome',
-        from: env.MAIL_SMTP_EMAIL, // Sender address
-        to: userEmail,         // List of recipients
-        // subject: 'Welcome to screech hub!', // Subject line
-        // text:
-        // `       Hi, ${userEmail} 
+        const message = {
+            from: env.MAIL_SMTP_EMAIL, // Sender address
+            to: userEmail,         // List of recipients
+            subject: 'Welcome to screech hub!', // Subject line
+            html: content // Plain text body
+        };
 
-        //     Welcome to the screech hub!. Hope you are enjoying a lot.
-    
-        // Thanks,
-        // Screech Hub` // Plain text body
-    };
-
-    email.send(message, function (err, info) {
-        if (err) {
-            reject(err);
-        } else {
-            resolve(info);
-        }
-    });
-   }) 
+        transport.sendMail(message, function (err, info) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(info);
+            }
+        });
+    })
 
 
 }
 
 
+function generateEmailVerificationContent(userEmail, linkData) {
+
+    const link = `http://localhost:4040/api/verify/emailVerification?id=${linkData.id}&token=${linkData.token}`;
+
+    return `<h3>Hi, ${userEmail} </h3>
+
+            <h5>
+            Welcome to the screech hub!. Hope you are enjoying a lot.  </h5>
+
+            <a href = '${link}'> 
+            Click here to verify your email. </a>
 
 
-module.exports = { generatePasswordHash, successResponse, sendEmail } 
+       
+        <h5>  Thanks,  </h5>
+        <h5> Screech Hub  </h5>`;
+}
+
+
+
+
+function generateRandomString() {
+    const length = 11;
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
+
+function generateEmailVerificationToken(data) {
+    const token = jwt.sign(data, config.jwtSecret, { expiresIn: '7d' });
+    return token;
+}
+
+
+
+
+module.exports = { generatePasswordHash, successResponse, sendEmail, generateRandomString, generateEmailVerificationToken } 

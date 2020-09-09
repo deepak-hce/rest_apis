@@ -76,8 +76,21 @@ function register(req, res, next) {
   });
 
 
-  user.save().then(() => {
-    util.sendEmail(req.body.username).then(() => {
+  user.save().then((response) => {
+
+    console.log(response);
+
+    const verificationObject = {
+      id: response._id
+    }
+
+    const token = util.generateEmailVerificationToken(verificationObject);
+
+    verificationObject.token = token;
+
+
+
+    util.sendEmail(req.body.username, verificationObject).then(() => {
       res.json(new Response('User registered successfully!'));
     }).catch(err => {
       console.log(err);
@@ -92,14 +105,14 @@ function register(req, res, next) {
 
 
 
+function tokenVerify(req, res) {
 
+  jwt.verify(req.body.token, config.jwtSecret, (err, user) => {
+    if (err) return res.json({ verified: false })
+    res.json({
+      verified: user
+    })
+  })
+}
 
-
-
-
-
-
-
-
-
-module.exports = { login, getRandomNumber, register };
+module.exports = { login, getRandomNumber, register, tokenVerify };
