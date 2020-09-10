@@ -9,10 +9,6 @@ const jwt = require('jsonwebtoken');
 
 
 
-
-
-
-
 function generatePasswordHash(password) {
     const hash = bcrypt.hashSync(password, 10);
     return hash;
@@ -97,8 +93,6 @@ function generateEmailVerificationToken(data) {
     const token = jwt.sign(data, config.jwtSecret, { expiresIn: '7d' });
     return token;
 }
-
-
 
 
 module.exports = { generatePasswordHash, successResponse, sendEmail, generateRandomString, generateEmailVerificationToken } 
