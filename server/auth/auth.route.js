@@ -25,7 +25,7 @@ router.route('/register')
 
 // router.route('/token').get(authCtrl.token);
 
-router.route('/verify').post(authCtrl.tokenVerify);
+// router.route('/verify').post(authCtrl.tokenVerify);
 
 
 

@@ -66,7 +66,7 @@ function generateEmailVerificationContent(userEmail, linkData) {
             Welcome to the screech hub!. Hope you are enjoying a lot.  </h5>
 
             <a href = '${link}'> 
-            Click here to verify your email. </a>
+            <img src = 'https://i.ibb.co/8DBtvzw/welcome-screech-hub.jpg'> </a>
 
 
        
@@ -94,5 +94,16 @@ function generateEmailVerificationToken(data) {
     return token;
 }
 
+function decodeToken(token) {
+    return new Promise((resolve, reject) => {
+        jwt.verify(token, config.jwtSecret, function (err, data) {
+            if (err) {
+                reject(null);
+            }
+            resolve(data);
+        })
+    }).catch(err => new Error(err))
+}
 
-module.exports = { generatePasswordHash, successResponse, sendEmail, generateRandomString, generateEmailVerificationToken } 
+
+module.exports = { generatePasswordHash, successResponse, sendEmail, generateRandomString, generateEmailVerificationToken, decodeToken } 

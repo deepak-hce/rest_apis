@@ -105,14 +105,6 @@ function register(req, res, next) {
 
 
 
-function tokenVerify(req, res) {
 
-  jwt.verify(req.body.token, config.jwtSecret, (err, user) => {
-    if (err) return res.json({ verified: false })
-    res.json({
-      verified: user
-    })
-  })
-}
 
-module.exports = { login, getRandomNumber, register, tokenVerify };
+module.exports = { login, getRandomNumber, register };
