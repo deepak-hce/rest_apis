@@ -19,7 +19,7 @@ const path = require('path');
 const app = express();
 
 if (config.env === 'development') {
-  app.use(logger('dev'));
+  // app.use(logger('dev'));
 }
 
 // parse body params and attache them to req.body

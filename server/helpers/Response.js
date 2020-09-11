@@ -1,9 +1,10 @@
 class Response {
-    constructor(comments) {
+    constructor(comments, result = null) {
        return {
             ResponseCode: 1,
             Comments: comments,
-            Success: true
+            Success: true,
+            Result: result
         }
     }
 }

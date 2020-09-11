@@ -23,18 +23,33 @@ const user = {
 function login(req, res, next) {
   // Ideally you'll fetch this from the db
   // Idea here was to show how jwt works with simplicity
-  if (req.body.username === user.username && req.body.password === user.password) {
-    const token = jwt.sign({
-      username: user.username
-    }, config.jwtSecret);
-    return res.json({
-      token,
-      username: user.username
-    });
-  }
 
-  const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED, true);
-  return next(err);
+  const username = req.body.username;
+  const password = req.body.password;
+
+
+  User.findOne({ username }).then(user => {
+    if (user !== null) {
+      const passwordMatch = util.decryptPasswordHash(password, user.password);
+
+      console.log('bcrypt', passwordMatch);
+
+      if (passwordMatch === true) {
+        const token = jwt.sign({
+          username: user.username
+        }, config.jwtSecret, { expiresIn: '48h' });
+        return res.json({
+          token,
+          username: user.username,
+          id: res._id
+        });
+      }
+      const err = new APIError('Username or password is incorrect.', httpStatus.CONFLICT, true);
+      return next(err);
+    }
+    const err = new APIError('No user found! Please register first.', httpStatus.CONFLICT, true);
+    return next(err);
+  })
 }
 
 /**
@@ -59,8 +74,7 @@ function register(req, res, next) {
   User.findOne({ username: req.body.username }, function (err, user) {
     if (user !== null) {
       const err = new APIError('User is already registered.', httpStatus.CONFLICT, true);
-      next(err);
-      return new Error(err);
+      return next(err);
     }
   });
 

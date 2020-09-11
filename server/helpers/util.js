@@ -14,6 +14,10 @@ function generatePasswordHash(password) {
     return hash;
 }
 
+function decryptPasswordHash(password, hash) {
+    const isCorrect = bcrypt.compareSync(password, hash);
+    return isCorrect;
+}
 
 function successResponse(message, code = 1) {
     return {
@@ -106,4 +110,4 @@ function decodeToken(token) {
 }
 
 
-module.exports = { generatePasswordHash, successResponse, sendEmail, generateRandomString, generateEmailVerificationToken, decodeToken } 
+module.exports = { generatePasswordHash, successResponse, sendEmail, generateRandomString, generateEmailVerificationToken, decodeToken, decryptPasswordHash } 
