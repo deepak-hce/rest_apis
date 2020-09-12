@@ -14,6 +14,7 @@ const routes = require('../index.route');
 const config = require('./config');
 const APIError = require('../server/helpers/APIError');
 const path = require('path');
+const middleware = require('./auth-middleware');
 
 
 const app = express();
@@ -52,8 +53,12 @@ if (config.env === 'development') {
   }));
 }
 
+
+app.use(middleware.apiAuthVerification);
+
 // mount all routes on /api path
 app.use('/api', routes);
+
 
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {

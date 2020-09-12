@@ -36,13 +36,14 @@ function login(req, res, next) {
 
       if (passwordMatch === true) {
         const token = jwt.sign({
-          username: user.username
+          username: user.username,
+          id: user._id
         }, config.jwtSecret, { expiresIn: '48h' });
-        return res.json({
+        return res.json(new Response('Logged In successfully', {
           token,
           username: user.username,
-          id: res._id
-        });
+          id: user._id
+        }));
       }
       const err = new APIError('Username or password is incorrect.', httpStatus.CONFLICT, true);
       return next(err);

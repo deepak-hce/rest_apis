@@ -4,6 +4,19 @@ const authRoutes = require('./server/auth/auth.route');
 const viewRoutes = require('./server/views/view.route');
 const verificationRoutes = require('./server/verification/verification.route');
 const router = express.Router(); // eslint-disable-line new-cap
+
+
+
+
+
+
+
+
+
+
+
+
+
 // TODO: use glob to match *.route files .
 /** 
  * GET /health-check - Check service health.
