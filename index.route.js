@@ -3,19 +3,9 @@ const userRoutes = require('./server/user/user.route');
 const authRoutes = require('./server/auth/auth.route');
 const viewRoutes = require('./server/views/view.route');
 const verificationRoutes = require('./server/verification/verification.route');
+const questionRoutes = require('./server/question/question.route');
+
 const router = express.Router(); // eslint-disable-line new-cap
-
-
-
-
-
-
-
-
-
-
-
-
 
 // TODO: use glob to match *.route files .
 /** 
@@ -35,5 +25,7 @@ router.use('/verify', verificationRoutes);
 
 // mount view routes at /views
 router.use('/views', viewRoutes);
+
+router.use('/question', questionRoutes)
 
 module.exports = router;

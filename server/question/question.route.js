@@ -8,5 +8,8 @@ const router = express.Router();
 
 router.route('/')
     .post(validate(paramValidation.addQuestion), questionCtrl.addQuestion)
-    .get(questionCtrl.getQuestion)
+
+
+module.exports = router;
+
     
