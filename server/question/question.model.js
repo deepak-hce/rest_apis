@@ -52,6 +52,13 @@ questionSchema.statics = {
             .skip((page - 1) * 10)
             .limit(10)
             .exec();
+    },
+
+    count(id) {
+        return this.find()
+        .where('userId', id)
+        .count()
+        .exec()
     }
 }
 

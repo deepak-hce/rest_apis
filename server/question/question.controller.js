@@ -23,7 +23,15 @@ function addQuestion(req, res, next) {
 function getQuestion(req, res, next) {
 
     Question.list(req.query.page, req.headers.id).then((questions) => {
-        return res.json(new Response('Question retrieved successfully', questions));
+        Question.count(req.headers.id).then((count) => {
+
+            const object = {
+                count,
+                questions
+            }
+
+            return res.json(new Response('Question retrieved successfully', object));
+        })
     })
     .catch((err) => {
         next(new ApiError(err));
