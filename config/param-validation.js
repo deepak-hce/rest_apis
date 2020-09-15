@@ -4,7 +4,7 @@ module.exports = {
   // POST /api/users
   createUser: {
     body: {
-      username:  Joi.string().email().required(),
+      username: Joi.string().email().required(),
       mobileNumber: Joi.string().regex(/^[1-9][0-9]{9}$/).required()
     }
   },
@@ -12,7 +12,7 @@ module.exports = {
   // UPDATE /api/users/:userId
   updateUser: {
     body: {
-      username:  Joi.string().email().required(),
+      username: Joi.string().email().required(),
       mobileNumber: Joi.string().regex(/^[1-9][0-9]{9}$/).required()
     },
     params: {
@@ -33,7 +33,7 @@ module.exports = {
 
   register: {
     body: {
-      username:  Joi.string().email().required(),
+      username: Joi.string().email().required(),
       password: Joi.string().required(),
       profilePicture: Joi.string(),
       age: Joi.string(),
@@ -48,6 +48,13 @@ module.exports = {
       description: Joi.string().required(),
       tags: Joi.array().items(Joi.string())
     }
+  },
+
+  getQuestion: {
+    query: {
+      page: Joi.number().required()
+    }
+
   }
 
 };

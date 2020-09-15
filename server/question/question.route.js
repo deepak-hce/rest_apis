@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.route('/')
     .post(validate(paramValidation.addQuestion), questionCtrl.addQuestion)
+    .get(validate(paramValidation.getQuestion), questionCtrl.getQuestion)
 
 
 module.exports = router;

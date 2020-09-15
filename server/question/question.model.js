@@ -43,4 +43,20 @@ const questionSchema = new mongoose.Schema({
     }
 })
 
+
+questionSchema.statics = {
+    list(page ,id) {
+        return this.find()
+            .where('userId', id)
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * 10)
+            .limit(10)
+            .exec();
+    }
+}
+
+
+
+
+
 module.exports = mongoose.model('Question', questionSchema);
