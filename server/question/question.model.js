@@ -45,7 +45,7 @@ const questionSchema = new mongoose.Schema({
 
 
 questionSchema.statics = {
-    list(page ,id) {
+    list(page, id) {
         return this.find()
             .where('userId', id)
             .sort({ createdAt: -1 })
