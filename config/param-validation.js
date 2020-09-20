@@ -54,6 +54,15 @@ module.exports = {
     query: {
       page: Joi.number().required()
     }
+  },
+
+  putQuestions: {
+    params: {
+      questionId: Joi.string().required()
+    },
+    query: {
+      type: Joi.string().valid('views', 'edit').required()
+    }
 
   }
 

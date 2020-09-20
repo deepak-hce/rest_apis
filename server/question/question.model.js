@@ -28,8 +28,16 @@ const questionSchema = new mongoose.Schema({
         default: 0
     },
     views: {
-        type: Number,
-        default: 0
+        count: {
+            type: Number,
+            default: 0
+        },
+        viewsIds: [{
+            type: mongoose.Types.ObjectId,
+            default: []
+        }
+        ],
+
     },
     tags: [{
         type: String,
@@ -56,10 +64,19 @@ questionSchema.statics = {
 
     count(id) {
         return this.find()
-        .where('userId', id)
-        .count()
-        .exec()
+            .where('userId', id)
+            .count()
+            .exec()
+    },
+
+    incrementView(questionId, id) {
+        return this.findByIdAndUpdate(questionId, { $inc: { 'views.count': 1 }, $push: { 'views.viewsIds': id } })
+    },
+
+    getQuestionDetail(questionId) {
+        return this.findById(questionId).exec()
     }
+
 }
 
 

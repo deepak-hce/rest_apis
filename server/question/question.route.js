@@ -10,7 +10,8 @@ router.route('/')
     .post(validate(paramValidation.addQuestion), questionCtrl.addQuestion)
     .get(validate(paramValidation.getQuestion), questionCtrl.getQuestion)
 
-
+router.route('/:questionId')
+    .put(validate(paramValidation.putQuestions), questionCtrl.modifyQuestion)
 module.exports = router;
 
     
