@@ -46,7 +46,10 @@ module.exports = {
     body: {
       question: Joi.string().required(),
       description: Joi.string().required(),
-      tags: Joi.array().items(Joi.string())
+      tags: Joi.array().items(Joi.string()),
+    },
+    file: {
+      mimetype: Joi.string().valid('image/gif', 'image/png', 'image/jpeg').required()
     }
   },
 
@@ -59,10 +62,10 @@ module.exports = {
   putQuestions: {
     params: {
       questionId: Joi.string().required()
-    },
-    query: {
-      type: Joi.string().valid('views', 'edit').required()
     }
+    // query: {
+    //   type: Joi.string().valid('views', 'edit').required()
+    // }
 
   }
 

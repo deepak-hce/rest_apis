@@ -7,6 +7,9 @@ const httpStatus = require('http-status');
 
 
 function addQuestion(req, res, next) {
+
+    console.log('add question request body', req.body);
+
     const question = new Question({
         question: req.body.question,
         description: req.body.description,
@@ -38,6 +41,71 @@ function getQuestion(req, res, next) {
 
 }
 
+
+function increaseVote(req, res, next) {
+    const questionId = req.params.questionId;
+    const userId = req.headers.id;
+
+    Question.findById(questionId).then((question) => {
+        console.log(question.views.viewsIds);
+
+        if (question !== null) {
+            const viewIds = question.votes.voteIds;
+
+            if ((viewIds).includes(userId)) {
+                next(new ApiError('Already viewed', httpStatus.CONFLICT));
+            } else {
+                Question.incrementVote(questionId, userId).then(() => {
+                    return res.json(new Response('Vote increased successfully'));
+                })
+            }
+        } else {
+            next(new ApiError('no question found with the provided id', httpStatus.CONFLICT));
+        }
+
+
+    }).catch(err => next(new ApiError(err, httpStatus.CONFLICT)))
+
+}
+
+
+function increaseView(req, res, next) {
+
+    const questionId = req.params.questionId;
+    const userId = req.headers.id;
+
+    Question.findById(questionId).then((question) => {
+        console.log(question.views.viewsIds);
+
+
+        if (question !== null) {
+            const viewIds = question.views.viewsIds;
+
+            if ((viewIds).includes(userId)) {
+                next(new ApiError('Already viewed', httpStatus.CONFLICT));
+            } else {
+                Question.incrementView(questionId, userId).then(() => {
+                    return res.json(new Response('View increased successfully'));
+                })
+            }
+        } else {
+            next(new ApiError('no question found with the provided id', httpStatus.CONFLICT));
+        }
+
+
+    }).catch(err => next(new ApiError(err, httpStatus.CONFLICT)))
+
+}
+
+
+
+
+
+
+
+
+
+
 function modifyQuestion(req, res, next) {
 
     console.log(req);
@@ -48,36 +116,6 @@ function modifyQuestion(req, res, next) {
     switch (type) {
         case 'views':
 
-            Question.findById(questionId).then((question) => {
-                console.log(question.views.viewsIds);
-
-
-                if (question !== null) {
-
-
-                    const viewIds = question.views.viewsIds;
-
-                    if ((viewIds).includes(userId)) {
-                        next(new ApiError('Already viewed', httpStatus.CONFLICT));
-                    } else {
-                        Question.incrementView(questionId, userId).then(() => {
-                            return res.json(new Response('View increased successfully'));
-                        })
-                    }
-                } else {
-                    next(new ApiError('no question found with the provided id', httpStatus.CONFLICT));
-                }
-
-
-            }).catch(err => next(new ApiError(err, httpStatus.CONFLICT)))
-
-
-
-
-            // res.json({
-            //     success: 'success',
-            //     type
-            // })
             break;
 
         case 'edit':
@@ -110,4 +148,4 @@ function modifyQuestion(req, res, next) {
 
 }
 
-module.exports = { addQuestion, getQuestion, modifyQuestion }
+module.exports = { addQuestion, getQuestion, modifyQuestion, increaseView, increaseVote }

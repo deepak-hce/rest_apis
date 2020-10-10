@@ -24,8 +24,16 @@ const questionSchema = new mongoose.Schema({
         default: false
     },
     votes: {
-        type: Number,
-        default: 0
+        count: {
+            type: Number,
+            default: 0
+        },
+        voteIds: [{
+            type: mongoose.Types.ObjectId,
+            default: []
+        }
+        ],
+
     },
     views: {
         count: {
@@ -71,6 +79,10 @@ questionSchema.statics = {
 
     incrementView(questionId, id) {
         return this.findByIdAndUpdate(questionId, { $inc: { 'views.count': 1 }, $push: { 'views.viewsIds': id } })
+    },
+
+    incrementVote(questionId, id) {
+        return this.findByIdAndUpdate(questionId, { $inc: { 'votes.count': 1 }, $push: { 'votes.voteIds': id } })
     },
 
     getQuestionDetail(questionId) {

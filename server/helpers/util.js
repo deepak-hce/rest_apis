@@ -9,6 +9,11 @@ const jwt = require('jsonwebtoken');
 
 
 
+
+
+
+
+
 function generatePasswordHash(password) {
     const hash = bcrypt.hashSync(password, 10);
     return hash;
@@ -108,6 +113,11 @@ function decodeToken(token) {
         })
     }).catch(err => new Error(err))
 }
+
+
+
+
+
 
 
 module.exports = { generatePasswordHash, successResponse, sendEmail, generateRandomString, generateEmailVerificationToken, decodeToken, decryptPasswordHash } 
